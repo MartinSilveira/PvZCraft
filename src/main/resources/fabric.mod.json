@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "pvzcraft",
+	"version": "${version}",
+	"name": "PvZCraft",
+	"description": "Plants vs Zombies Mod for Minecraft 1.21.X by Martin Silveira",
+	"authors": [
+		"Martin Silveira"
+	],
+	"contact": {
+		"homepage": "https://www.linkedin.com/in/martinpsilveira",
+		"sources": "https://github.com/MartinSilveira/PvZCraft"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/pvzcraft/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.martinsil.pvzcraft.PvZCraft"
+		],
+		"fabric-datagen": [
+			"com.martinsil.pvzcraft.PvZCraftDataGenerator"
+		],
+		"client": [
+			"com.martinsil.pvzcraft.PvZCraftClient"
+		]
+	},
+	"mixins": [
+		"pvzcraft.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
