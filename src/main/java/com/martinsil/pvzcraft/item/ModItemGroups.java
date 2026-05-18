@@ -20,12 +20,11 @@ public class ModItemGroups {
                         entries.add(new ItemStack(ModItems.PEA));
 
                         entries.add(new ItemStack(ModItems.PEASHOOTER));
+
+                        entries.add(new ItemStack(ModItems.REGULAR_ZOMBIE));
                     }).build());
 
     public static void registerItemGroups() {
         PvZCraft.LOGGER.info("Registering Item Groups for " + PvZCraft.MOD_ID);
     }
-
-
-
 }

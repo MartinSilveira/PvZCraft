@@ -17,6 +17,7 @@ public class ModItems {
 
     public static final Item PEASHOOTER = registerItem("peashooter", new PlantItem(ModEntities.PEASHOOTER, new Item.Settings()));
 
+    public static final Item REGULAR_ZOMBIE = registerItem("regular_zombie", new ZombieItem(ModEntities.REGULAR_ZOMBIE, new Item.Settings()));
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, Identifier.of(PvZCraft.MOD_ID, name), item);

@@ -1,9 +1,10 @@
 package com.martinsil.pvzcraft.entity.custom;
 
+import com.martinsil.pvzcraft.entity.PlantEntity;
+import com.martinsil.pvzcraft.entity.PvZZombieEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -12,23 +13,16 @@ import net.minecraft.entity.ai.goal.ProjectileAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.projectile.thrown.SnowballEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-public class PeashooterEntity extends AnimalEntity implements RangedAttackMob {
+public class PeashooterEntity extends PlantEntity implements RangedAttackMob {
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState shootAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
 
-    public PeashooterEntity(EntityType<? extends AnimalEntity> entityType, World world) {
+    public PeashooterEntity(EntityType<? extends PlantEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -36,9 +30,9 @@ public class PeashooterEntity extends AnimalEntity implements RangedAttackMob {
     protected void initGoals() {
         this.goalSelector.add(0, new ProjectileAttackGoal(this, 0.0D, 30, 25.0F));
 
-        this.targetSelector.add(0, new ActiveTargetGoal<>(this, ZombieEntity.class, 1, true, false, zombie -> {
+        this.targetSelector.add(0, new ActiveTargetGoal<>(this, PvZZombieEntity.class, 1, true, false, zombie -> {
                                                                                         // Increase reciprocalChance to 5 or 10 if frames get really bad
-            // Checks if the zombie in the same lane (1 block wide)
+            // Checks if the zombie in the same lane
             boolean inSameLane = Math.abs(zombie.getX() - this.getX()) <= 0.5;
 
             // Checks if the zombie is North of the Peashooter (Negative Z direction)
@@ -54,7 +48,7 @@ public class PeashooterEntity extends AnimalEntity implements RangedAttackMob {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 300.0)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0D)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 25.0D); // decrease this to the min range needed if frames get bad
     }
@@ -95,35 +89,20 @@ public class PeashooterEntity extends AnimalEntity implements RangedAttackMob {
     }
 
     @Override
-    public boolean isPushable() {
-        return false;
-    }
-
-    @Override
-    public boolean isBreedingItem(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public @Nullable PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return null;
-    }
-
-    @Override
     public void shootAt(LivingEntity target, float pullProgress) {
         this.getWorld().sendEntityStatus(this, (byte) 11); // Play shoot animation
 
         PeaEntity peaEntity = new PeaEntity(this.getWorld(), this);
         peaEntity.setNoGravity(true);
 
-        // Calculate the mouth coordinates
-        Vec3d lookDir = this.getRotationVector();
+        // Calculate where to shoot the Pea from
         double spawnX = this.getX();
         double spawnY = this.getY() + 0.6D;
-        double spawnZ = this.getZ() - 0.5D;
+        double spawnZ = this.getZ();
         peaEntity.setPosition(spawnX, spawnY, spawnZ);
 
-        peaEntity.setVelocity(lookDir.x, 0.0D, lookDir.z, 1F, 0.0F);
+        Vec3d lookDir = this.getRotationVector();
+        peaEntity.setVelocity(lookDir.x, 0.0D, lookDir.z, 0.5F, 0.0F);
         this.playSound(SoundEvents.ENTITY_SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.getWorld().spawnEntity(peaEntity);
     }

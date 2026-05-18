@@ -3,6 +3,7 @@ package com.martinsil.pvzcraft;
 import com.martinsil.pvzcraft.entity.ModEntities;
 import com.martinsil.pvzcraft.entity.client.PeashooterModel;
 import com.martinsil.pvzcraft.entity.custom.PeashooterEntity;
+import com.martinsil.pvzcraft.entity.custom.RegularZombieEntity;
 import com.martinsil.pvzcraft.item.ModItemGroups;
 import com.martinsil.pvzcraft.item.ModItems;
 import net.fabricmc.api.ModInitializer;
@@ -33,9 +34,14 @@ public class PvZCraft implements ModInitializer {
 				overworld.setWeather(1000000, 0, false, false);
 				server.getGameRules().get(GameRules.DO_DAYLIGHT_CYCLE).set(false, server);
 				server.getGameRules().get(GameRules.DO_WEATHER_CYCLE).set(false, server);
+
+				server.getGameRules().get(GameRules.DO_MOB_SPAWNING).set(false, server);
 			}
 		});
 
+
+
 		FabricDefaultAttributeRegistry.register(ModEntities.PEASHOOTER, PeashooterEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.REGULAR_ZOMBIE, RegularZombieEntity.createAttributes());
 	}
 }

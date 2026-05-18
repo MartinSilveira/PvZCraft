@@ -41,7 +41,7 @@ public class PeaEntity extends ThrownItemEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
         Entity entity = entityHitResult.getEntity();
-        int i = 5; // deals 20 damage really but for now we keep it 5
+        int i = 20; // deals 20 damage
         entity.damage(this.getDamageSources().thrown(this, this.getOwner()), i);
     }
 

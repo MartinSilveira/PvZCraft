@@ -21,3 +21,13 @@
 - Adjusted Peashooter Entity dimensions
 - Adjusted Pea Entity dimensions
 - Fixed Peashooter not instantly spawning facing North
+
+
+## 06/05/2026 - 15/05/2026
+- Created Zombie Model
+- Created Zombie Item
+- Created Zombie Entity
+- Fixed some bugs
+
+## 18/05/2026
+- Created PlantEntity and PvZZombieEntity classes

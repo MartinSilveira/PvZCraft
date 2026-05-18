@@ -2,9 +2,11 @@
   "item.pvzcraft.sun": "Sun",
   "item.pvzcraft.pea": "Pea",
   "item.pvzcraft.peashooter": "Peashooter",
+  "item.pvzcraft.regular_zombie": "Zombie",
 
   "itemgroup.pvzcraft.pvzcraft_items": "PvZCraft",
 
   "entity.pvzcraft.peashooter": "Peashooter",
-  "entity.pvzcraft.pea": "Pea"
+  "entity.pvzcraft.pea": "Pea",
+  "entity.pvzcraft.regular_zombie": "Zombie"
 }

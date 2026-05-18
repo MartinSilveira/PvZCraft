@@ -10,3 +10,6 @@ This template is available under the CC0 license. Feel free to learn from it and
 
 
 ## Todo
+- Figure out why zombie "lags" a little
+- Figure out why peas sometimes go through zombies (probably because of these lags or collision mechanic)
+- Animate Zombies

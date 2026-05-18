@@ -3,6 +3,7 @@ package com.martinsil.pvzcraft.entity;
 import com.martinsil.pvzcraft.PvZCraft;
 import com.martinsil.pvzcraft.entity.custom.PeaEntity;
 import com.martinsil.pvzcraft.entity.custom.PeashooterEntity;
+import com.martinsil.pvzcraft.entity.custom.RegularZombieEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
@@ -18,7 +19,12 @@ public class ModEntities {
     public static final EntityType<PeaEntity> PEA = Registry.register(Registries.ENTITY_TYPE,
             Identifier.of(PvZCraft.MOD_ID, "pea"),
             EntityType.Builder.<PeaEntity>create(PeaEntity::new, SpawnGroup.MISC)
-                    .dimensions(0.2F, 0.2F).build());
+                    .dimensions(0.5F, 0.5F).build());
+
+    public static final EntityType<RegularZombieEntity> REGULAR_ZOMBIE = Registry.register(Registries.ENTITY_TYPE,
+            Identifier.of(PvZCraft.MOD_ID, "regular_zombie"),
+            EntityType.Builder.create(RegularZombieEntity::new, SpawnGroup.MONSTER)
+                    .dimensions(0.9F, 1.7F).build());
 
 
     public static void registerModEntities() {
