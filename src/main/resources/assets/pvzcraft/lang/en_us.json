@@ -1,10 +1,14 @@
 {
+  "itemgroup.pvzcraft.pvzcraft_items": "PvZCraft",
+
   "item.pvzcraft.sun": "Sun",
   "item.pvzcraft.pea": "Pea",
   "item.pvzcraft.peashooter": "Peashooter",
   "item.pvzcraft.regular_zombie": "Zombie",
 
-  "itemgroup.pvzcraft.pvzcraft_items": "PvZCraft",
+  "block.pvzcraft.lawn_block_dark_green": "Dark Green Lawn Block",
+  "block.pvzcraft.lawn_block_green": "Green Lawn Block",
+  "block.pvzcraft.lawn_block_light_green": "Light Green Lawn Block",
 
   "entity.pvzcraft.peashooter": "Peashooter",
   "entity.pvzcraft.pea": "Pea",

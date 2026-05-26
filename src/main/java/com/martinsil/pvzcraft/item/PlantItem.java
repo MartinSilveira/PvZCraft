@@ -1,7 +1,7 @@
 package com.martinsil.pvzcraft.item;
 
+import com.martinsil.pvzcraft.block.ModBlocks;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -18,13 +18,22 @@ import net.minecraft.world.event.GameEvent;
 
 import java.util.List;
 
+import static com.martinsil.pvzcraft.util.Constants.*;
+
 public class PlantItem extends Item {
     // Type of plant the item is supposed to spawn
     private final EntityType<?> entityType;
 
+
     public PlantItem(EntityType<?> entityType, Settings settings) {
         super(settings);
         this.entityType = entityType;
+    }
+
+    private boolean isNotLawn(BlockState state) {
+        return !state.isOf(ModBlocks.LAWN_BLOCK_GREEN) &&
+                !state.isOf(ModBlocks.LAWN_BLOCK_DARK_GREEN) &&
+                !state.isOf(ModBlocks.LAWN_BLOCK_LIGHT_GREEN);
     }
 
     @Override
@@ -39,9 +48,9 @@ public class PlantItem extends Item {
         BlockPos pos = context.getBlockPos().up();
 
         // Make the plant spawn in the middle of a 2x2 square
-        double spawnX = Math.floor(pos.getX() / 2.0) * 2.0;
+        double spawnX = Math.round(pos.getX() / 2.0f) * 2.0;
         double spawnY = pos.getY();
-        double spawnZ = Math.floor(pos.getZ() / 2.0) * 2.0;
+        double spawnZ = Math.round(pos.getZ() / 2.0f) * 2.0;
 
         // Get the 4 blocks that make up the 2x2 square
         int bX = MathHelper.floor(spawnX);
@@ -53,10 +62,8 @@ public class PlantItem extends Item {
         BlockState b3 = world.getBlockState(new BlockPos(bX - 1, bY, bZ));
         BlockState b4 = world.getBlockState(new BlockPos(bX, bY, bZ));
 
-        // If any of those 4 blocks is not grass, don't place
-        if (!b1.isOf(Blocks.GRASS_BLOCK) || !b2.isOf(Blocks.GRASS_BLOCK) ||
-            !b3.isOf(Blocks.GRASS_BLOCK) || !b4.isOf(Blocks.GRASS_BLOCK)) {
-
+        // If any of those 4 blocks is not lawn blocks, don't place
+        if (isNotLawn(b1) || isNotLawn(b2) || isNotLawn(b3) || isNotLawn(b4)) {
             return ActionResult.PASS;
         }
 
@@ -70,9 +77,11 @@ public class PlantItem extends Item {
         Entity entity = this.entityType.create(world);
         if (entity != null) {
             // Set its spawn position and make it face North
-            entity.setYaw(180.0F);
-            entity.setBodyYaw(180.0F);
-            entity.setHeadYaw(180.0F);
+            float directionToFace = NORTH * LAWN_MAP_DIR;
+
+            entity.setYaw(directionToFace);
+            entity.setBodyYaw(directionToFace);
+            entity.setHeadYaw(directionToFace);
             entity.refreshPositionAndAngles(spawnX, spawnY, spawnZ, entity.getYaw() , 0.0F);
 
             world.spawnEntity(entity);

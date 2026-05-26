@@ -3,7 +3,7 @@
 	"package": "com.martinsil.pvzcraft.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"HideHotbarMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

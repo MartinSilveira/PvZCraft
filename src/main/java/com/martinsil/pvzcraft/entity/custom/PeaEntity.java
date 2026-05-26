@@ -1,6 +1,7 @@
 package com.martinsil.pvzcraft.entity.custom;
 
 import com.martinsil.pvzcraft.entity.ModEntities;
+import com.martinsil.pvzcraft.entity.PvZZombieEntity;
 import com.martinsil.pvzcraft.item.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityStatuses;
@@ -29,8 +30,8 @@ public class PeaEntity extends ThrownItemEntity {
 
     @Override
     protected boolean canHit(Entity entity) {
-        // If the entity is not a Monster, the Pea ignores it and flies through it
-        if (!(entity instanceof Monster)) {
+        // If the entity is not a Zombie, the Pea ignores it and flies through it
+        if (!(entity instanceof PvZZombieEntity)) {
             return false;
         }
 
@@ -39,10 +40,12 @@ public class PeaEntity extends ThrownItemEntity {
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        super.onEntityHit(entityHitResult);
-        Entity entity = entityHitResult.getEntity();
-        int i = 20; // deals 20 damage
-        entity.damage(this.getDamageSources().thrown(this, this.getOwner()), i);
+        if (entityHitResult.getEntity() instanceof PvZZombieEntity zombie) {
+            int i = 20; // deals 20 damage
+            zombie.damage(this.getDamageSources().thrown(this, this.getOwner()), i);
+
+            zombie.timeUntilRegen = 0;
+        }
     }
 
     @Override

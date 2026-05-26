@@ -1,5 +1,6 @@
 package com.martinsil.pvzcraft.entity.custom;
 
+import com.martinsil.pvzcraft.block.ModBlocks;
 import com.martinsil.pvzcraft.entity.PlantEntity;
 import com.martinsil.pvzcraft.entity.PvZZombieEntity;
 import net.minecraft.block.BlockState;
@@ -9,6 +10,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.ProjectileAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -17,7 +19,9 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class PeashooterEntity extends PlantEntity implements RangedAttackMob {
+import static com.martinsil.pvzcraft.util.Constants.*;
+
+public class PeashooterEntity extends PlantEntity {
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState shootAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
@@ -28,7 +32,35 @@ public class PeashooterEntity extends PlantEntity implements RangedAttackMob {
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(0, new ProjectileAttackGoal(this, 0.0D, 30, 25.0F));
+        this.goalSelector.add(0, new Goal() {
+            private int cooldown = 5;
+
+            @Override
+            public boolean canStart() {
+                // Start if we have a target
+                return getTarget() != null;
+            }
+
+            @Override
+            public void start() {
+                // THE FIX: When the goal starts, set cooldown to 5 so it fires almost intantly
+                this.cooldown = 5;
+            }
+
+            @Override
+            public void tick() {
+                if (getTarget() == null) return;
+
+                if (this.cooldown <= 0) {
+                    // Shoot the Pea!
+                    shoot(); // Make sure this calls your custom shoot() method
+                    // Reset the cooldown (20 ticks = 1 second)
+                    this.cooldown = 20;
+                } else {
+                    this.cooldown--;
+                }
+            }
+        });
 
         this.targetSelector.add(0, new ActiveTargetGoal<>(this, PvZZombieEntity.class, 1, true, false, zombie -> {
                                                                                         // Increase reciprocalChance to 5 or 10 if frames get really bad
@@ -40,7 +72,9 @@ public class PeashooterEntity extends PlantEntity implements RangedAttackMob {
 
             // Checks if the zombie has reached the lawn
             BlockState blockUnderZombie = zombie.getWorld().getBlockState(zombie.getBlockPos().down());
-            boolean isOnLawn = blockUnderZombie.isOf(Blocks.GRASS_BLOCK);
+            boolean isOnLawn = (blockUnderZombie.isOf(ModBlocks.LAWN_BLOCK_GREEN) ||
+                                blockUnderZombie.isOf(ModBlocks.LAWN_BLOCK_DARK_GREEN) ||
+                                blockUnderZombie.isOf(ModBlocks.LAWN_BLOCK_LIGHT_GREEN));
 
             return inSameLane && isNorth && isOnLawn;
         }));
@@ -83,13 +117,14 @@ public class PeashooterEntity extends PlantEntity implements RangedAttackMob {
         }
 
         // Force the body and head to face North (180.0F)
-        this.setYaw(180.0F);
-        this.setBodyYaw(180.0F);
-        this.setHeadYaw(180.0F);
+        float directionToFace = NORTH * LAWN_MAP_DIR;
+
+        this.setYaw(directionToFace);
+        this.setBodyYaw(directionToFace);
+        this.setHeadYaw(directionToFace);
     }
 
-    @Override
-    public void shootAt(LivingEntity target, float pullProgress) {
+    public void shoot() {
         this.getWorld().sendEntityStatus(this, (byte) 11); // Play shoot animation
 
         PeaEntity peaEntity = new PeaEntity(this.getWorld(), this);

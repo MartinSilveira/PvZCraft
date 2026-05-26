@@ -23,7 +23,7 @@
 - Fixed Peashooter not instantly spawning facing North
 
 
-## 06/05/2026 - 15/05/2026
+## 06/05/2026 - 12/05/2026
 - Created Zombie Model
 - Created Zombie Item
 - Created Zombie Entity
@@ -31,3 +31,36 @@
 
 ## 18/05/2026
 - Created PlantEntity and PvZZombieEntity classes
+- Added three lawn blocks
+- Updated Front Lawn
+
+## 21/05/2026
+- Fixed Zombie and Plant spawns
+- Changed the default menu to match PvZ's main menu better
+- Started working on the levels logic in Adventure mode
+- Added Roof and Pool to the house (basically finished house)
+
+## 22/05/2026
+- Improved LevelManager
+- Created LevelData, SpawnProfileData and LevelDataLoader
+- Added test level
+
+## 23/05/2026
+- Improved LevelManager and levels logic
+- Organized and cleaned up a lot of code
+
+## 24/05/2026
+- Improved code and levels logic
+- Added Constants.java to store constants
+- Added HudRenderer.java to display overlays during levels
+- Added Huge Wave, Final Wave and Level overlays
+
+## 25/05/2026
+- Improved bug where Peas would go through zombies (still happens but wayyy less)
+- Fixed Plants taking 30 ticks to start shooting new targets (changed it to 5 ticks)
+- Added seed hotbar on the top left and removed the default hotbar
+- Added Ready, Set, Plant overlay
+
+## 26/05/2026
+- Code cleanup
+- Bug fixes

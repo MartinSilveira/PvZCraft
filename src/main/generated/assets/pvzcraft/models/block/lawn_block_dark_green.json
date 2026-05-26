@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "pvzcraft:block/lawn_block_dark_green"
+  }
+}

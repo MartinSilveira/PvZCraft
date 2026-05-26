@@ -1,5 +1,6 @@
 package com.martinsil.pvzcraft.entity;
 
+import com.martinsil.pvzcraft.adventure.LevelManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
@@ -16,14 +17,11 @@ public class PvZZombieEntity extends HostileEntity {
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        boolean wasDamaged = super.damage(source, amount);
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
 
-        // If the zombie took damage, reset its invincibility shield
-        if (wasDamaged) {
-            this.timeUntilRegen = 0;
+        if (!this.getWorld().isClient()) {
+            LevelManager.onZombieDeath();
         }
-
-        return wasDamaged;
     }
 }

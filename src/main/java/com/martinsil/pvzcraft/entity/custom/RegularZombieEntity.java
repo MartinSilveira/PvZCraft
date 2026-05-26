@@ -10,6 +10,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.world.World;
 
+import static com.martinsil.pvzcraft.util.Constants.*;
+
 public class RegularZombieEntity extends PvZZombieEntity {
     public RegularZombieEntity(EntityType<? extends PvZZombieEntity> entityType, World world) {
         super(entityType, world);
@@ -53,8 +55,16 @@ public class RegularZombieEntity extends PvZZombieEntity {
         }
 
         // Force the body and head to face South
-        this.setYaw(0.0F);
-        this.setBodyYaw(0.0F);
-        this.setHeadYaw(0.0F);
+        float directionToFace = SOUTH * LAWN_MAP_DIR;
+
+        setYaw(directionToFace);
+        setBodyYaw(directionToFace);
+        setHeadYaw(directionToFace);
+
+        // LAWN_END = 13.5
+        //if (getZ() >= 13.5) {
+            //LevelManager.triggerGameOver((ServerWorld) getWorld());
+        //}
+
     }
 }

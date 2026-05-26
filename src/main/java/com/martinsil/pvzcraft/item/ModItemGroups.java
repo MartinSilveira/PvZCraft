@@ -1,6 +1,7 @@
 package com.martinsil.pvzcraft.item;
 
 import com.martinsil.pvzcraft.PvZCraft;
+import com.martinsil.pvzcraft.block.ModBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -15,13 +16,23 @@ public class ModItemGroups {
             FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.SUN))
                     .displayName(Text.translatable("itemgroup.pvzcraft.pvzcraft_items"))
                     .entries((displayContext, entries) -> {
+                        // Items
                         entries.add(new ItemStack(ModItems.SUN));
 
+                        // Projectiles
                         entries.add(new ItemStack(ModItems.PEA));
 
-                        entries.add(new ItemStack(ModItems.PEASHOOTER));
+                        // Plants
+                        entries.add(ModItems.PEASHOOTER);
 
-                        entries.add(new ItemStack(ModItems.REGULAR_ZOMBIE));
+                        // Zombies
+                        entries.add(ModItems.REGULAR_ZOMBIE);
+
+                        // Blocks
+                        entries.add(ModBlocks.LAWN_BLOCK_GREEN);
+                        entries.add(ModBlocks.LAWN_BLOCK_DARK_GREEN);
+                        entries.add(ModBlocks.LAWN_BLOCK_LIGHT_GREEN);
+
                     }).build());
 
     public static void registerItemGroups() {

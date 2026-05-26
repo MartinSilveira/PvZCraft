@@ -1,0 +1,42 @@
+{
+  "level_id": "1_0",
+  "level_name": "Level 1-0",
+  "type": "test",
+  "map": "day_lawn",
+  "economy": {
+    "startingSun": 0,
+    "sunDropIntervalTicks": 0
+  },
+  "plants": {
+    "disallowed": [],
+    "maxSelections": 6
+  },
+  "spawnProfileId": "day_early_game",
+  "waves": [
+    {
+      "index": 0,
+      "budget": 5,
+      "hugeWave": false,
+      "finalWave": false
+    },
+    {
+      "index": 1,
+      "budget": 20,
+      "hugeWave": true,
+      "finalWave": false
+    },
+    {
+      "index": 2,
+      "budget": 5,
+      "hugeWave": false,
+      "finalWave": false
+    },
+    {
+      "index": 3,
+      "budget": 30,
+      "hugeWave": true,
+      "finalWave": true
+    }
+  ],
+  "reward": ""
+}

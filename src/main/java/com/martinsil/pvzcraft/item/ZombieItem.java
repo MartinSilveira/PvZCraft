@@ -10,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
+import static com.martinsil.pvzcraft.util.Constants.*;
+
 public class ZombieItem extends Item {
     // Type of zombie the item is supposed to spawn
     private final EntityType<?> entityType;
@@ -30,16 +32,18 @@ public class ZombieItem extends Item {
         BlockPos pos = context.getBlockPos().up();
 
         // Make the zombie spawn in the middle of a 2x2 square
-        double spawnX = Math.floor(pos.getX() / 2.0) * 2.0;
+        double spawnX = Math.round(pos.getX() / 2.0f) * 2.0;
         double spawnY = pos.getY();
-        double spawnZ = Math.floor(pos.getZ() / 2.0) * 2.0;
+        double spawnZ = Math.round(pos.getZ() / 2.0f) * 2.0;
 
         Entity entity = this.entityType.create(world);
         if (entity != null) {
             // Set its spawn position and make it face South
-            entity.setYaw(0.0F);
-            entity.setBodyYaw(0.0F);
-            entity.setHeadYaw(0.0F);
+            float directionToFace = SOUTH * LAWN_MAP_DIR;
+
+            entity.setYaw(directionToFace);
+            entity.setBodyYaw(directionToFace);
+            entity.setHeadYaw(directionToFace);
             entity.refreshPositionAndAngles(spawnX, spawnY, spawnZ, entity.getYaw() , 0.0F);
 
             world.spawnEntity(entity);

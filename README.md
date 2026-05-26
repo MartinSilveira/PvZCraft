@@ -7,9 +7,3 @@ For setup instructions, please see the [Fabric Documentation page](https://docs.
 ## License
 
 This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
-
-
-## Todo
-- Figure out why zombie "lags" a little
-- Figure out why peas sometimes go through zombies (probably because of these lags or collision mechanic)
-- Animate Zombies

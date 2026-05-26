@@ -1,0 +1,30 @@
+{
+  "level_id": "1_1",
+  "level_name": "Level 1-1",
+  "type": "adventure",
+  "map": "day_lawn",
+  "economy": {
+    "startingSun": 150,
+    "sunDropIntervalTicks": 550
+  },
+  "plants": {
+    "disallowed": [],
+    "maxSelections": 1
+  },
+  "spawnProfileId": "day_early_game",
+  "waves": [
+    {
+      "index": 0,
+      "budget": 3,
+      "hugeWave": false,
+      "finalWave": false
+    },
+    {
+      "index": 1,
+      "budget": 2,
+      "hugeWave": true,
+      "finalWave": true
+    }
+  ],
+  "reward": "pvzcraft:sunflower_seed_packet"
+}

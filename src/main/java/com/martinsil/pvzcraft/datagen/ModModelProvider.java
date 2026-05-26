@@ -1,5 +1,6 @@
 package com.martinsil.pvzcraft.datagen;
 
+import com.martinsil.pvzcraft.block.ModBlocks;
 import com.martinsil.pvzcraft.item.ModItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -18,7 +19,9 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LAWN_BLOCK_GREEN);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LAWN_BLOCK_DARK_GREEN);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LAWN_BLOCK_LIGHT_GREEN);
     }
 
     @Override
