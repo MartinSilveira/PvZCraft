@@ -18,7 +18,6 @@ public class LevelDataLoader implements SimpleSynchronousResourceReloadListener 
     public static final Identifier ID = Identifier.of("pvzcraft", "data_loader");
 
     public static final Map<String, LevelData> LOADED_LEVELS = new HashMap<>();
-    public static final Map<String, SpawnProfileData> LOADED_PROFILES = new HashMap<>();
 
     @Override
     public Identifier getFabricId() {
@@ -29,18 +28,6 @@ public class LevelDataLoader implements SimpleSynchronousResourceReloadListener 
     public void reload(ResourceManager manager) {
 
         LOADED_LEVELS.clear();
-        LOADED_PROFILES.clear();
-
-        // Load Spawn Profiles
-        Map<Identifier, Resource> profileFiles = manager.findResources("spawn_profiles", id -> id.getPath().endsWith(".json"));
-        for (Map.Entry<Identifier, Resource> entry : profileFiles.entrySet()) {
-            try (Reader reader = new InputStreamReader(entry.getValue().getInputStream())) {
-                SpawnProfileData profile = GSON.fromJson(reader, SpawnProfileData.class);
-                LOADED_PROFILES.put(profile.id, profile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         // Load Levels
         Map<Identifier, Resource> levelFiles = manager.findResources("levels", id -> id.getPath().endsWith(".json"));
@@ -53,6 +40,6 @@ public class LevelDataLoader implements SimpleSynchronousResourceReloadListener 
             }
         }
 
-        PvZCraft.LOGGER.info("Loaded {} PvZ Levels and {} Profiles!", LOADED_LEVELS.size(), LOADED_PROFILES.size());
+        PvZCraft.LOGGER.info("Loaded {} PvZ Levels!", LOADED_LEVELS.size());
     }
 }

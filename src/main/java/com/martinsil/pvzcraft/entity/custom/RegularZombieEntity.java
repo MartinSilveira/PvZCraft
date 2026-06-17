@@ -1,5 +1,6 @@
 package com.martinsil.pvzcraft.entity.custom;
 
+import com.martinsil.pvzcraft.adventure.LevelManager;
 import com.martinsil.pvzcraft.entity.PlantEntity;
 import com.martinsil.pvzcraft.entity.PvZZombieEntity;
 import net.minecraft.entity.EntityType;
@@ -8,9 +9,11 @@ import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
 import static com.martinsil.pvzcraft.util.Constants.*;
+import static com.martinsil.pvzcraft.util.PvZZombieConstants.REGULAR_ZOMBIE_SPEED;
 
 public class RegularZombieEntity extends PvZZombieEntity {
     public RegularZombieEntity(EntityType<? extends PvZZombieEntity> entityType, World world) {
@@ -36,7 +39,7 @@ public class RegularZombieEntity extends PvZZombieEntity {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 200.0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 190.0)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 60.0D);
     }
@@ -51,7 +54,7 @@ public class RegularZombieEntity extends PvZZombieEntity {
 
         // Move toward South until it finds a plant to eat
         if (getTarget() == null) {
-            setVelocity(0.0D,  getVelocity().y, 0.03D);
+            setVelocity(0.0D,  getVelocity().y, REGULAR_ZOMBIE_SPEED);
         }
 
         // Force the body and head to face South
@@ -61,10 +64,8 @@ public class RegularZombieEntity extends PvZZombieEntity {
         setBodyYaw(directionToFace);
         setHeadYaw(directionToFace);
 
-        // LAWN_END = 13.5
-        //if (getZ() >= 13.5) {
-            //LevelManager.triggerGameOver((ServerWorld) getWorld());
-        //}
-
+        if (getZ() >= LAWN_BORDER_Z[1] + 0.5) {
+            LevelManager.triggerGameOver();
+        }
     }
 }

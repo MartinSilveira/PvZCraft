@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "pvzcraft:block/dirt_rock_block"
+  }
+}

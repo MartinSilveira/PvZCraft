@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "pvzcraft:block/fence_top" },
+    "facing=east":  { "model": "pvzcraft:block/fence_top", "y": 90 },
+    "facing=south": { "model": "pvzcraft:block/fence_top", "y": 180 },
+    "facing=west":  { "model": "pvzcraft:block/fence_top", "y": 270 }
+  }
+}

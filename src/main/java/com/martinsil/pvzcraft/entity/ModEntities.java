@@ -1,9 +1,7 @@
 package com.martinsil.pvzcraft.entity;
 
 import com.martinsil.pvzcraft.PvZCraft;
-import com.martinsil.pvzcraft.entity.custom.PeaEntity;
-import com.martinsil.pvzcraft.entity.custom.PeashooterEntity;
-import com.martinsil.pvzcraft.entity.custom.RegularZombieEntity;
+import com.martinsil.pvzcraft.entity.custom.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
@@ -25,6 +23,16 @@ public class ModEntities {
             Identifier.of(PvZCraft.MOD_ID, "regular_zombie"),
             EntityType.Builder.create(RegularZombieEntity::new, SpawnGroup.MONSTER)
                     .dimensions(0.9F, 1.7F).build());
+
+    public static final EntityType<SunEntity> SUN_ENTITY = Registry.register(Registries.ENTITY_TYPE,
+            Identifier.of(PvZCraft.MOD_ID, "sun_entity"),
+            EntityType.Builder.create(SunEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.9F, 0.9F).build());
+
+    public static final EntityType<LawnmowerEntity> LAWNMOWER = Registry.register(Registries.ENTITY_TYPE,
+            Identifier.of(PvZCraft.MOD_ID, "lawnmower"),
+            EntityType.Builder.create(LawnmowerEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.7F, 0.7F).build());
 
 
     public static void registerModEntities() {

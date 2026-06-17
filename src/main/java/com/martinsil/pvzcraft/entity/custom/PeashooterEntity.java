@@ -4,14 +4,10 @@ import com.martinsil.pvzcraft.block.ModBlocks;
 import com.martinsil.pvzcraft.entity.PlantEntity;
 import com.martinsil.pvzcraft.entity.PvZZombieEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.ProjectileAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
@@ -20,6 +16,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.martinsil.pvzcraft.util.Constants.*;
+import static com.martinsil.pvzcraft.util.PlantConstants.*;
+import static com.martinsil.pvzcraft.util.PlantProjectileConstants.PEA_SPEED;
 
 public class PeashooterEntity extends PlantEntity {
     public final AnimationState idleAnimationState = new AnimationState();
@@ -43,7 +41,7 @@ public class PeashooterEntity extends PlantEntity {
 
             @Override
             public void start() {
-                // THE FIX: When the goal starts, set cooldown to 5 so it fires almost intantly
+                // When the goal starts, set cooldown to 5 so it fires almost instantly
                 this.cooldown = 5;
             }
 
@@ -52,10 +50,8 @@ public class PeashooterEntity extends PlantEntity {
                 if (getTarget() == null) return;
 
                 if (this.cooldown <= 0) {
-                    // Shoot the Pea!
-                    shoot(); // Make sure this calls your custom shoot() method
-                    // Reset the cooldown (20 ticks = 1 second)
-                    this.cooldown = 20;
+                    shoot();
+                    this.cooldown = PEASHOOTER_SHOOT_INT; // shoots every 28 ticks
                 } else {
                     this.cooldown--;
                 }
@@ -82,7 +78,7 @@ public class PeashooterEntity extends PlantEntity {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 300.0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, PEASHOOTER_HEALTH)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0D)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 25.0D); // decrease this to the min range needed if frames get bad
     }
@@ -127,7 +123,7 @@ public class PeashooterEntity extends PlantEntity {
     public void shoot() {
         this.getWorld().sendEntityStatus(this, (byte) 11); // Play shoot animation
 
-        PeaEntity peaEntity = new PeaEntity(this.getWorld(), this);
+        PeaEntity peaEntity = new PeaEntity(this, this.getWorld());
         peaEntity.setNoGravity(true);
 
         // Calculate where to shoot the Pea from
@@ -137,7 +133,7 @@ public class PeashooterEntity extends PlantEntity {
         peaEntity.setPosition(spawnX, spawnY, spawnZ);
 
         Vec3d lookDir = this.getRotationVector();
-        peaEntity.setVelocity(lookDir.x, 0.0D, lookDir.z, 0.5F, 0.0F);
+        peaEntity.setVelocity(lookDir.x, 0.0D, lookDir.z, PEA_SPEED, 0.0F);
         this.playSound(SoundEvents.ENTITY_SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.getWorld().spawnEntity(peaEntity);
     }

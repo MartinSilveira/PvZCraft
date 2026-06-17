@@ -3,9 +3,9 @@ package com.martinsil.pvzcraft;
 import com.martinsil.pvzcraft.adventure.LevelData;
 import com.martinsil.pvzcraft.adventure.LevelDataLoader;
 import com.martinsil.pvzcraft.adventure.LevelManager;
-import com.martinsil.pvzcraft.adventure.SpawnProfileData;
 import com.martinsil.pvzcraft.block.ModBlocks;
 import com.martinsil.pvzcraft.entity.ModEntities;
+import com.martinsil.pvzcraft.entity.custom.LawnmowerEntity;
 import com.martinsil.pvzcraft.entity.custom.PeashooterEntity;
 import com.martinsil.pvzcraft.entity.custom.RegularZombieEntity;
 import com.martinsil.pvzcraft.item.ModItemGroups;
@@ -64,6 +64,7 @@ public class PvZCraft implements ModInitializer {
 	private void registerModEntities() {
 		FabricDefaultAttributeRegistry.register(ModEntities.PEASHOOTER, PeashooterEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.REGULAR_ZOMBIE, RegularZombieEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.LAWNMOWER, LawnmowerEntity.createAttributes());
 	}
 
 	private void manageCommands() {
@@ -74,13 +75,10 @@ public class PvZCraft implements ModInitializer {
 			dispatcher.register(CommandManager.literal("pvzstart")
 					.executes(context -> {
 
-						// Load the level and profile data
-						LevelData level = LevelDataLoader.LOADED_LEVELS.get("1_0");
+						// Load the level data
+						LevelData level = LevelDataLoader.LOADED_LEVELS.get("1-0");
 						if (level != null) {
-							SpawnProfileData profile = LevelDataLoader.LOADED_PROFILES.get(level.spawnProfileId);
-
-							// Start that particular level with that profile
-							LevelManager.startLevel(level, profile);
+							LevelManager.startLevel(level);
 						} else {
 							LOGGER.info("ERROR: Could not find Test level JSON");
 						}
@@ -108,11 +106,10 @@ public class PvZCraft implements ModInitializer {
 			player.teleport(world, PLAYER_LAWN_SPAWN_COORDS[0], PLAYER_LAWN_SPAWN_COORDS[1], PLAYER_LAWN_SPAWN_COORDS[2], NORTH, 0.0F);
 
 			if (LevelManager.isAdventureMode) {
-				LevelData level = LevelDataLoader.LOADED_LEVELS.get("1_1");
+				LevelData level = LevelDataLoader.LOADED_LEVELS.get("1-1");
 
 				if (level != null) {
-					SpawnProfileData profile = LevelDataLoader.LOADED_PROFILES.get(level.spawnProfileId);
-					LevelManager.startLevel(level, profile);
+					LevelManager.startLevel(level);
 				} else {
 					LOGGER.info("ERROR: Could not find Adventure Level JSON!");
 				}

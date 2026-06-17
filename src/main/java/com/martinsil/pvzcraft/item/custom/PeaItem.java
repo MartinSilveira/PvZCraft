@@ -11,6 +11,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import static com.martinsil.pvzcraft.util.PlantProjectileConstants.PEA_SPEED;
+
 public class PeaItem extends Item {
 
     public PeaItem(Settings settings) {
@@ -31,14 +33,13 @@ public class PeaItem extends Item {
                 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
         );
         if (!world.isClient) {
-            PeaEntity peaEntity = new PeaEntity(world, user);
+            PeaEntity peaEntity = new PeaEntity(user, world);
             peaEntity.setNoGravity(true);
-            peaEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.0F, 0.0F);
+            peaEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, PEA_SPEED, 0.0F);
             world.spawnEntity(peaEntity);
         }
 
         user.incrementStat(Stats.USED.getOrCreateStat(this));
-        itemStack.decrementUnlessCreative(1, user);
         return TypedActionResult.success(itemStack, world.isClient());
     }
 }

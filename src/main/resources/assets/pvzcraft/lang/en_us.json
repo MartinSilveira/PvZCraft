@@ -5,10 +5,15 @@
   "item.pvzcraft.pea": "Pea",
   "item.pvzcraft.peashooter": "Peashooter",
   "item.pvzcraft.regular_zombie": "Zombie",
+  "item.pvzcraft.lawnmower": "Lawnmower",
 
   "block.pvzcraft.lawn_block_dark_green": "Dark Green Lawn Block",
   "block.pvzcraft.lawn_block_green": "Green Lawn Block",
   "block.pvzcraft.lawn_block_light_green": "Light Green Lawn Block",
+  "block.pvzcraft.dirt_rock_block": "Dirt Rock Block",
+  "block.pvzcraft.dirt_block": "Dirt Block",
+  "block.pvzcraft.fence_bottom": "Fence Bottom",
+  "block.pvzcraft.fence_top": "Fence Top",
 
   "entity.pvzcraft.peashooter": "Peashooter",
   "entity.pvzcraft.pea": "Pea",

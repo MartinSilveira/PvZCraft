@@ -9,7 +9,7 @@ public class LevelData {
     public String map;
     public Economy economy;
     public Plants plants;
-    public String spawnProfileId;
+    public List<ZombiePool> zombies;
     public List<Wave> waves;
     public String reward;
 
@@ -21,6 +21,15 @@ public class LevelData {
     public static class Plants {
         public List<String> disallowed;
         public int maxSelections;
+    }
+
+    public static class ZombiePool {
+        public String zombieId;
+        public int prob;
+        public int minWave;
+        public int maxWave;
+        public int minBudget;
+        public int maxBudget;
     }
 
     public static class Wave {

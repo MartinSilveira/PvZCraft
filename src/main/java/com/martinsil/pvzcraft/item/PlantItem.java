@@ -1,6 +1,8 @@
 package com.martinsil.pvzcraft.item;
 
+import com.martinsil.pvzcraft.adventure.LevelManager;
 import com.martinsil.pvzcraft.block.ModBlocks;
+import com.martinsil.pvzcraft.util.PlantConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -8,6 +10,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -43,6 +46,17 @@ public class PlantItem extends Item {
         if (!(world instanceof ServerWorld)) {
             return ActionResult.SUCCESS;
         }
+
+        String plantId = Registries.ITEM.getId(this).toString();
+        int cost = getPlantCost(plantId);
+
+        // Check if the player can afford the plant
+        if (LevelManager.currentSun < cost)
+            return ActionResult.PASS;
+
+        // Check if cooldown for the plant has already finished
+        if (context.getPlayer().getItemCooldownManager().isCoolingDown(this))
+            return ActionResult.PASS; // On cooldown
 
         ItemStack itemStack = context.getStack();
         BlockPos pos = context.getBlockPos().up();
@@ -86,13 +100,28 @@ public class PlantItem extends Item {
 
             world.spawnEntity(entity);
 
-            if (context.getPlayer() != null && !context.getPlayer().isCreative()) {
-                itemStack.decrement(1);
+            if (context.getPlayer() != null) {
+                LevelManager.currentSun -= cost;
+                context.getPlayer().getItemCooldownManager().set(this, getPlantCooldown(plantId));
             }
 
             world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, pos);
             return ActionResult.CONSUME;
         }
         return ActionResult.PASS;
+    }
+
+    public static int getPlantCost(String plantId) {
+        return switch (plantId) {
+            case "pvzcraft:peashooter" -> PlantConstants.PEASHOOTER_COST;
+            default -> 1; // Fallback so the game doesn't crash if there's a typo in the json
+        };
+    }
+
+    public static int getPlantCooldown(String plantId) {
+        return switch (plantId) {
+            case "pvzcraft:peashooter" -> PlantConstants.PEASHOOTER_COOLDOWN;
+            default -> 0; // Fallback so the game doesn't crash if there's a typo in the json
+        };
     }
 }

@@ -64,3 +64,46 @@
 ## 26/05/2026
 - Code cleanup
 - Bug fixes
+
+## 07/06/2026 - 08/06/2026
+- More code organizing
+- Add Seed Packet texture to the seed slots in the hotbar
+- Fixed the bug "Invalid Player Data" where map wasn't getting completely cleared
+- Adjusted RegularZombie and Peashooter parameters (speed, shooting interval)
+- Added cooldowns to placing plants
+- Added Sun mechanics
+- Added performance stats to the GUI
+
+## 09/06/2026 - 14/06/2026
+- Improved Hotbar significantly (visually and code)
+- Added Fence Bottom block and added it to the map
+- Added Fence Top block and added it to the map
+- Added Lawnmowers
+
+## 17/06/2026
+- Fixed FacingBlock class so it works generically for every block
+- Fixed hitbox for Fence Top
+- Added Dirt Rock Block and Dirt Block
+- Replaced all lanes except the middle one with the new dirt blocks in Level 1-1 
+- Made Zombies and Lawnmower spawn only in the middle lane in Level 1-1
+
+## Todo
+(Before moving on to next level)
+- Add RegularZombie Animations
+- Do Artwork for Level 1-0 and 1-1
+- Remove cooldowns in Level 1-0
+- Do Artwork for Level Progress
+- Add Level Progress logic
+- Add timeout to Sun (and make it slowly start fading as it reaches the end of its life)
+- Add Tutorial dialogue to Level 1-1
+- Add original sounds (don't forget to add them to .gitignore)
+- Add Artwork for when Zombies reach our door
+- Improve the level finish logic
+- Add Seed Packet Item
+- Make the last Zombie drop the reward upon dying
+- Display the sun cost for each plant in the seed slots
+- Do Artwork for "User"'s House (probably just display in default font)
+- Make it so that leaving mid-game saves the game, then asks if you want to resume the level or restart
+
+In the future:
+- Add the panning "animation?" where it shows the player the Zombies that will spawn in that level

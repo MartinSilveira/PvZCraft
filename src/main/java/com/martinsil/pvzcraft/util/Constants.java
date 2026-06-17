@@ -4,11 +4,14 @@ import net.minecraft.util.Identifier;
 
 public class Constants {
     // Lawn Constants
+    public static final int[] LAWN_BORDER_X = {-1, 9};
+    public static final int[] LAWN_BORDER_Z = {-5, 13};
+    public static final int LAWN_Y = -61;
     public static final int[] LAWN_LANES = {0, 2, 4, 6, 8};
     public static final int ZOMBIE_LAWN_SPAWN_Y = -60;
     public static final float ZOMBIE_LAWN_SPAWN_Z = -6.5F;
     public static final int[] PLAYER_LAWN_SPAWN_COORDS = {4, -60, 0};
-    public static final float LAWN_END = 13.5F;
+    public static final int SUN_SPAWN_Y = -54;
 
     // Pool Constants
 
@@ -46,4 +49,5 @@ public class Constants {
     public static final Identifier SET_TEXTURE = Identifier.of("pvzcraft", "textures/gui/set.png");
     public static final Identifier PLANT_TEXTURE = Identifier.of("pvzcraft", "textures/gui/plant.png");
     public static final Identifier LEVEL_TEXTURE = Identifier.of("pvzcraft", "textures/gui/level.png");
+    public static final Identifier SEED_PACKET_TEXTURE = Identifier.of("pvzcraft", "textures/gui/seed_packet.png");
 }

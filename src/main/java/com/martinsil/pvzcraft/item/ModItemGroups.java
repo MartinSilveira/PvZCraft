@@ -2,6 +2,7 @@ package com.martinsil.pvzcraft.item;
 
 import com.martinsil.pvzcraft.PvZCraft;
 import com.martinsil.pvzcraft.block.ModBlocks;
+import com.martinsil.pvzcraft.entity.ModEntities;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -32,6 +33,13 @@ public class ModItemGroups {
                         entries.add(ModBlocks.LAWN_BLOCK_GREEN);
                         entries.add(ModBlocks.LAWN_BLOCK_DARK_GREEN);
                         entries.add(ModBlocks.LAWN_BLOCK_LIGHT_GREEN);
+                        entries.add(ModBlocks.FENCE_BOTTOM);
+                        entries.add(ModBlocks.FENCE_TOP);
+                        entries.add(ModBlocks.DIRT_BLOCK);
+                        entries.add(ModBlocks.DIRT_ROCK_BLOCK);
+
+                        // Others
+                        entries.add(ModItems.LAWNMOWER);
 
                     }).build());
 

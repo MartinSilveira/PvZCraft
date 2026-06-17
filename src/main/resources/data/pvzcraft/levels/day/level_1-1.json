@@ -1,17 +1,28 @@
 {
-  "level_id": "1_1",
+  "level_id": "1-1",
   "level_name": "Level 1-1",
   "type": "adventure",
   "map": "day_lawn",
   "economy": {
     "startingSun": 150,
-    "sunDropIntervalTicks": 550
+    "sunDropIntervalTicks": 100
   },
   "plants": {
     "disallowed": [],
     "maxSelections": 1
   },
-  "spawnProfileId": "day_early_game",
+
+  "zombies": [
+    {
+      "zombieId": "pvzcraft:regular_zombie",
+      "prob": 100,
+      "minWave": 0,
+      "maxWave": 1,
+      "minBudget": 1,
+      "maxBudget": 3
+    }
+  ],
+
   "waves": [
     {
       "index": 0,

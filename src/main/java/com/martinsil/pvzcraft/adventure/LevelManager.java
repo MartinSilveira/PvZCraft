@@ -1,13 +1,24 @@
 package com.martinsil.pvzcraft.adventure;
 
+import com.martinsil.pvzcraft.entity.ModEntities;
+import com.martinsil.pvzcraft.entity.custom.LawnmowerEntity;
+import com.martinsil.pvzcraft.entity.custom.SunEntity;
+import com.martinsil.pvzcraft.item.ModItems;
 import com.martinsil.pvzcraft.messages.MessageSender;
+import com.martinsil.pvzcraft.util.PlantConstants;
+import com.martinsil.pvzcraft.util.PvZZombieConstants;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.Registries;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import static com.martinsil.pvzcraft.map.MapManager.setupMapForLevel;
 import static com.martinsil.pvzcraft.util.Constants.*;
 
 public class LevelManager {
@@ -18,7 +29,6 @@ public class LevelManager {
     private static ServerWorld world = null;
 
     public static LevelData currentLevelData;
-    public static SpawnProfileData currentProfileData;
 
     public static LevelData.Wave currentWave;
     private static final List<String> zombieQueue = new ArrayList<>();
@@ -36,11 +46,22 @@ public class LevelManager {
     public static int setTexTimer = 0;
     public static int plantTexTimer = 0;
 
-    public static void startLevel(LevelData level, SpawnProfileData profile) {
+    // Economy
+    public static int currentSun = 0;
+    private static int sunDropTimer = 0;
+
+    public static void startLevel(LevelData level) {
         currentLevelData = level;
-        currentProfileData = profile;
         currentWave = currentLevelData.waves.getFirst();
+        currentSun = currentLevelData.economy.startingSun;
+        sunDropTimer = currentLevelData.economy.sunDropIntervalTicks;
         currentState = State.PLAYING;
+
+        // in the future make it so that this only gets called for "special" levels
+        // such as 1-1 through 1-5 that have a different lawn
+        // otherwise this is useless
+        setupMapForLevel(world, currentLevelData.level_id);
+        spawnLawnmowers();
     }
 
     public static void tick() {
@@ -54,6 +75,8 @@ public class LevelManager {
             return;
 
         decreaseTimers();
+
+        checkSpawnSun();
 
         spawnZombiesInQueue();
 
@@ -80,6 +103,9 @@ public class LevelManager {
 
         if (plantTexTimer > 0)
             plantTexTimer--;
+
+        if (currentLevelData.economy.sunDropIntervalTicks > 0)
+            sunDropTimer--;
     }
 
     private static void spawnZombiesInQueue() {
@@ -101,7 +127,11 @@ public class LevelManager {
 
         var zombie = type.create(world);
         if (zombie != null) {
-            double spawnX = LAWN_LANES[world.random.nextInt(LAWN_LANES.length)];
+            double spawnX;
+            if (Objects.equals(currentLevelData.level_id, "1-1"))
+                spawnX = LAWN_LANES[2]; // Spawn in middle lane
+            else
+                spawnX = LAWN_LANES[world.random.nextInt(LAWN_LANES.length)];
 
             zombie.refreshPositionAndAngles(spawnX, ZOMBIE_LAWN_SPAWN_Y, ZOMBIE_LAWN_SPAWN_Z, SOUTH, 0.0F);
 
@@ -143,31 +173,30 @@ public class LevelManager {
     private static void pickZombiesToSpawn() {
         int remainingBudget = currentWave.budget;
 
-        // Algorithm that decides what zombies to spawn in that wave
         while (remainingBudget > 0) {
             final int currentRemaining = remainingBudget;
 
-            // Filter zombies that are allowed in this wave and it can afford
-            List<SpawnProfileData.ZombiePool> validZombies = currentProfileData.zombies.stream()
-                    .filter(z -> currentWave.index >= z.minWave && currentWave.index <= z.maxWave) // Check wave limits
-                    .filter(z -> currentWave.budget >= z.minBudget && currentWave.budget <= z.maxBudget) // Check wave budget thresholds
-                    .filter(z -> z.cost <= currentRemaining) // Check if it can afford it
+            // Filter out the zombies that are impossible to spawn in this wave
+            List<LevelData.ZombiePool> validZombies = currentLevelData.zombies.stream()
+                    .filter(z -> currentWave.index >= z.minWave && currentWave.index <= z.maxWave)
+                    .filter(z -> currentWave.budget >= z.minBudget && currentWave.budget <= z.maxBudget)
+                    .filter(z -> getZombieCost(z.zombieId) <= currentRemaining)
                     .toList();
 
-            // If nothing fits the remaining budget, stop buying
             if (validZombies.isEmpty()) break;
 
-            // Calculate total probability weight
+            // Pick the random zombies to spawn this wave
             int totalProb = validZombies.stream().mapToInt(z -> z.prob).sum();
             int randomChoice = world.random.nextInt(totalProb);
 
-            // Select zombie based on probability
             int currentWeight = 0;
-            for (SpawnProfileData.ZombiePool pool : validZombies) {
+            for (LevelData.ZombiePool pool : validZombies) {
                 currentWeight += pool.prob;
                 if (randomChoice < currentWeight) {
-                    zombieQueue.add(pool.zombieId); // Add to the spawn queue
-                    remainingBudget -= pool.cost;
+                    zombieQueue.add(pool.zombieId);
+
+                    // Subtract the zombie's cost to the budget
+                    remainingBudget -= getZombieCost(pool.zombieId);
                     break;
                 }
             }
@@ -186,12 +215,58 @@ public class LevelManager {
         }
     }
 
+    private static void spawnLawnmowers() {
+        int[] lanesToSpawn = LAWN_LANES;
+        if (Objects.equals(currentLevelData.level_id, "1-1"))
+            lanesToSpawn = new int[]{LAWN_LANES[2]}; // Spawn them in the middle lane only
+
+        for (int laneX : lanesToSpawn) {
+            // Create the Lawnmower
+            LawnmowerEntity lawnmower = ModEntities.LAWNMOWER.create(world);
+
+            if (lawnmower != null) {
+                // Set the coordinates and rotation
+                lawnmower.refreshPositionAndAngles(laneX, LAWN_Y + 1, LAWN_BORDER_Z[1] + 0.2, NORTH * LAWN_MAP_DIR, 0.0F);
+
+                // Spawn it into the world
+                world.spawnEntity(lawnmower);
+            }
+        }
+    }
+
+    private static void checkSpawnSun() {
+        if (sunDropTimer <= 0) {
+            spawnSunFromSky(world);
+
+            // Reset the timer for the next sun
+            sunDropTimer = currentLevelData.economy.sunDropIntervalTicks;
+        }
+    }
+
+    private static void spawnSunFromSky(ServerWorld world) {
+        int minX = LAWN_BORDER_X[0] + 1; // make them spawn at most 1 block from the border
+        int maxX = LAWN_BORDER_X[1] - 1;
+        int minZ = LAWN_BORDER_Z[0] + 1;
+        int maxZ = LAWN_BORDER_Z[1] - 1;
+
+        double spawnX = world.random.nextBetween(minX, maxX);
+        double spawnZ = world.random.nextBetween(minZ, maxZ);
+
+        // Create the SunEntity
+        SunEntity sun = new SunEntity(ModEntities.SUN_ENTITY, world);
+        sun.setPosition(spawnX, SUN_SPAWN_Y, spawnZ);
+
+        // Tell it to use the Sun Item texture
+        sun.setStack(new ItemStack(ModItems.SUN));
+
+        world.spawnEntity(sun);
+    }
+
     public static void resetLevel() {
         currentState = State.IDLE;
         isAdventureMode = false;
 
         currentLevelData = null;
-        currentProfileData = null;
 
         currentWave = null;
         zombiesAlive = 0;
@@ -204,9 +279,21 @@ public class LevelManager {
         readyTexTimer = 0;
         setTexTimer = 0;
         plantTexTimer = 0;
+
+        currentSun = 0;
+        sunDropTimer = 0;
     }
 
     public static void setWorld(ServerWorld overworld) {
         world = overworld;
     }
+
+    private static int getZombieCost(String zombieId) {
+        return switch (zombieId) {
+            case "pvzcraft:regular_zombie" -> PvZZombieConstants.REGULAR_ZOMBIE_COST;
+            default -> 1; // Fallback so the game doesn't crash if there's a typo in the json
+        };
+    }
+
+
 }
